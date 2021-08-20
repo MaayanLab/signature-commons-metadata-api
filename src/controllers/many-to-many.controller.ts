@@ -49,7 +49,7 @@ export class ManyToMany {
   @authenticate('GET.entities.signatures')
   @get('/entities/{id}/signatures', {
     tags: ['Entity'],
-    operationId: 'Entity.signatures',
+    operationId: 'ManyToMany.getEntitySignatures',
     responses: {
       '200': {
         description: 'Get the signatures that contains the given entity',
@@ -116,7 +116,7 @@ export class ManyToMany {
 
   @authenticate('GET.signatures.entities')
   @get('/signatures/{id}/entities', {
-    operationId: 'Signature.entities',
+    operationId: 'ManyToMany.getSignatureEntities',
     responses: {
       '200': {
         description: 'Get the entities of a signature',
@@ -188,7 +188,7 @@ export class ManyToMany {
   @authenticate('GET.entities.signatures.count')
   @get('/entities/{id}/signatures/count', {
     tags: ['Entity'],
-    operationId: 'Entity.signatures.count',
+    operationId: 'ManyToMany.getEntitySignaturesCount',
     responses: {
       '200': {
         description: 'Entity model signature count',
@@ -215,7 +215,7 @@ export class ManyToMany {
   @authenticate('GET.signatures.entities.count')
   @get('/signatures/{id}/entities/count', {
     tags: ['Signature'],
-    operationId: 'Signature.entities.count',
+    operationId: 'ManyToMany.getSignatureEntitiesCount',
     responses: {
       '200': {
         description: 'Signature model entity count',
@@ -244,7 +244,7 @@ export class ManyToMany {
   @authenticate('GET.entities.signatures.value_count')
   @get('/entities/{id}/signatures/value_count', {
     tags: ['Entity'],
-    operationId: 'Entity.signatures.value_count',
+    operationId: 'ManyToMany.getEntitySignaturesValueCount',
     responses: {
       '200': {
         description: 'Entity model signature value count',
@@ -286,7 +286,7 @@ export class ManyToMany {
   @authenticate('GET.signatures.entities.value_count')
   @get('/signatures/{id}/entities/value_count', {
     tags: ['Signature'],
-    operationId: 'Signature.entities.value_count',
+    operationId: 'ManyToMany.getSignatureEntitiesValueCount',
     responses: {
       '200': {
         description: 'Signature model entity value count',
@@ -329,7 +329,7 @@ export class ManyToMany {
   @authenticate('GET.entities.signatures.distinct_value_count')
   @get('/entities/{id}/signatures/distinct_value_count', {
     tags: ['Entity'],
-    operationId: 'Entity.signatures.distinct_value_count',
+    operationId: 'ManyToMany.getEntitySignaturesDistinctValueVount',
     responses: {
       '200': {
         description: 'Entity model signature distinct value count',
@@ -374,7 +374,7 @@ export class ManyToMany {
   @authenticate('GET.signatures.entities.distinct_value_count')
   @get('/signatures/{id}/entities/distinct_value_count', {
     tags: ['Signature'],
-    operationId: 'Signature.entities.distinct_value_count',
+    operationId: 'ManyToMany.getSignatureEntitiesDistinctValueCount',
     responses: {
       '200': {
         description: 'Signature model entity distinct value count',
@@ -419,7 +419,7 @@ export class ManyToMany {
   @authenticate('GET.entities.signatures.key_count')
   @get('/entities/{id}/signatures/key_count', {
     tags: ['Entity'],
-    operationId: 'Entity.signatures.key_count',
+    operationId: 'ManyToMany.getEntitySignaturesKeyCount',
     responses: {
       '200': {
         description: 'Entity model signature key count',
@@ -462,7 +462,7 @@ export class ManyToMany {
   @authenticate('GET.signatures.entities.key_count')
   @get('/signatures/{id}/entities/key_count', {
     tags: ['Signature'],
-    operationId: 'Signature.entities.key_count',
+    operationId: 'ManyToMany.getSignatureEntitiesKeyCount',
     responses: {
       '200': {
         description: 'Signature model entity key count',

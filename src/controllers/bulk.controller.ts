@@ -16,6 +16,8 @@ import {
   Schema,
   Signature,
 } from '../generic-controllers';
+
+import {ManyToMany} from '../controllers/many-to-many.controller';
 import {UserProfile} from '../models';
 
 const controllers = {
@@ -24,6 +26,7 @@ const controllers = {
   Library: Library,
   Schema: Schema,
   Resource: Resource,
+  ManyToMany: ManyToMany,
 };
 
 @api({
@@ -221,6 +224,26 @@ class BulkController {
           results.push({response});
         } else if (operationId === 'deleteById') {
           const response = await Controller.deleteById(op.parameters.id);
+          results.push({response});
+        } else if (operationId === 'getEntitySignatures') {
+          const Repository = await this.ctx.get<any>(
+            `repositories.EntitySignaturesRepository`,
+          );
+          const response = await Controller.getEntitySignatures(
+            Repository,
+            op.parameters.id,
+            op.parameters.filter,
+          );
+          results.push({response});
+        } else if (operationId === 'getSignatureEntities') {
+          const Repository = await this.ctx.get<any>(
+            `repositories.SignatureEntitiesRepository`,
+          );
+          const response = await Controller.getSignatureEntities(
+            Repository,
+            op.parameters.id,
+            op.parameters.filter,
+          );
           results.push({response});
         } else {
           throw new HttpErrors.UnprocessableEntity(
