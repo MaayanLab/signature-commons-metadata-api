@@ -241,6 +241,7 @@ class SummaryController {
         }>;
         priority: number;
         type: string;
+        props: any;
       };
     } = {};
 
@@ -263,6 +264,7 @@ class SummaryController {
           ).map(([key, val]) => ({count: val, name: key})),
           priority: entry.meta.priority,
           type: entry.meta.type,
+          props: entry.meta.props,
         };
       } else {
         const stats = await this.get_resource_signatures_count(
@@ -275,6 +277,7 @@ class SummaryController {
           stats,
           priority: entry.meta.priority,
           type: entry.meta.type,
+          props: entry.meta.props,
         };
       }
     }
@@ -398,7 +401,7 @@ class SummaryController {
       await this.bg.setStatus('get_metacounts');
       const {counts: meta} = await this.get_metacounts();
       const count_charts: {[key: string]: {}} = {};
-      for (const type of ['bar', 'pie', 'word']) {
+      for (const type of ['bar', 'pie', 'word', 'icon']) {
         await this.bg.setStatus(`get_${type}_stats`);
         const {counts} = await this.get_visualization_count(type);
         count_charts[type] = counts;
