@@ -1,9 +1,7 @@
 import {validate} from '@dcic/signature-commons-schema';
 import {authenticate, AuthenticationBindings} from '@loopback/authentication';
 import {inject} from '@loopback/core';
-import {
-  repository,
-} from '@loopback/repository';
+import {repository} from '@loopback/repository';
 import {
   api,
   get,
@@ -15,25 +13,18 @@ import {
   HttpErrors,
 } from '@loopback/rest';
 
-import {IGenericEntity} from '../generic-controllers/generic.controller'
+import {IGenericEntity} from '../generic-controllers/generic.controller';
 
 import {prune} from '../generic-controllers/generic.controller';
 import serializeError from 'serialize-error';
 
-import {
-  UserInputRepository,
-} from '../repositories';
+import {UserInputRepository} from '../repositories';
 
-import {applyFieldsFilter} from '../util/applyFieldsFilter';
-
-import {
-  UserInput,
-} from '../entities';
+import {UserInput} from '../entities';
 import {UserProfile} from '../models';
 
 import debug from '../util/debug';
-import { v5 as uuidv5 } from 'uuid';
-
+import {v5 as uuidv5} from 'uuid';
 
 @api({
   basePath: process.env.PREFIX,
@@ -47,7 +38,7 @@ export class UserInputController {
     private response: Response,
   ) {}
 
-  @authenticate('UserInput.get')
+  @authenticate('GET.UserInput')
   @get('/user_input/{id}', {
     tags: ['UserInput'],
     operationId: 'UserInput.getUserInput',
@@ -68,7 +59,7 @@ export class UserInputController {
   async getUserInput(
     @repository(UserInputRepository)
     userInputRepository: UserInputRepository,
-    @param.path.string('id') id: string
+    @param.path.string('id') id: string,
   ): Promise<IGenericEntity> {
     return {
       $validator: '/dcic/signature-commons-schema/v6/core/user_input.json',
@@ -76,7 +67,7 @@ export class UserInputController {
     };
   }
 
-  @authenticate('UserInput.save')
+  @authenticate('GET.UserInput.save')
   @post('/user_input', {
     tags: ['UserInput'],
     operationId: 'UserInput.save',
@@ -121,12 +112,13 @@ export class UserInputController {
     obj: UserInput,
   ): Promise<IGenericEntity> {
     try {
-      const modelSchema = "/dcic/signature-commons-schema/v6/core/user_input.json"
-      
-      const namespace = process.env.NAMESPACE || ''
-      const meta = JSON.stringify(obj.meta)
-      const id = uuidv5(meta, namespace)
-      
+      const modelSchema =
+        '/dcic/signature-commons-schema/v6/core/user_input.json';
+
+      const namespace = process.env.NAMESPACE ?? '';
+      const meta = JSON.stringify(obj.meta);
+      const id = uuidv5(meta, namespace);
+
       const results = await userInputRepository.find({
         where: {
           id: id,
@@ -137,8 +129,8 @@ export class UserInputController {
         // console.log(`${id} exists`)
         return {
           $validator: modelSchema,
-          ...(<any>results[0])
-        }
+          ...(<any>results[0]),
+        };
       } else {
         // it does not
         // console.log(`${id} is new`)
@@ -163,5 +155,4 @@ export class UserInputController {
       throw new HttpErrors.NotAcceptable(serializeError(e));
     }
   }
-
 }

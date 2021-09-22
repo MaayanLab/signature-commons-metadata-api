@@ -17,7 +17,7 @@ import {
   memory_factory,
   typeorm_factory,
 } from '../fixtures/datasources/testdb.datasource';
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 
 const memory_db = memory_factory();
 export {memory_db};

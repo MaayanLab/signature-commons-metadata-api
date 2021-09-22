@@ -1,9 +1,4 @@
-import {
-  Entity as TypeORMEntity,
-  Column,
-  Index,
-  Generated,
-} from 'typeorm';
+import {Entity as TypeORMEntity, Column, Index, Generated} from 'typeorm';
 import {Entity as LBEntity, model, property} from '@loopback/repository';
 import {getJsonSchema} from '@loopback/rest';
 
@@ -46,6 +41,5 @@ export class UserInput extends LBEntity {
   meta: {
     [key: string]: any;
   };
-
 }
 export const UserInputSchema = getJsonSchema(UserInput);

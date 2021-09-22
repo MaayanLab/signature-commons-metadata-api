@@ -30,7 +30,7 @@ import {
   Response,
   RestBindings,
 } from '@loopback/rest';
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 import debug from '../util/debug';
 import serializeError from 'serialize-error';
 import {flatten_keys} from '../util/flatten-keys';
