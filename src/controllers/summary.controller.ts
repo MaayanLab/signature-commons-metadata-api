@@ -185,6 +185,7 @@ class SummaryController {
           name: item.meta.text,
           icon: item.meta.icon,
           priority: item.meta.priority,
+          props: item.meta.props,
           count: count_stats,
         };
       });
@@ -219,6 +220,7 @@ class SummaryController {
         count: count[k],
         icon: entry.meta.icon,
         priority: entry.meta.priority,
+        props: entry.meta.props,
       });
     }
     counts.sort((a, b) => b.count - a.count);
