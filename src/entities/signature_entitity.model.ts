@@ -6,7 +6,7 @@ import {
   JoinColumn,
   Index,
 } from 'typeorm';
-import {Entity, Entity as LBEntity, model} from '@loopback/repository';
+import {Entity, Entity as LBEntity, model, property} from '@loopback/repository';
 import {getJsonSchema} from '@loopback/rest';
 import {Entity as SigcomEntity} from './entity.model';
 import {Signature} from './signature.model';
@@ -59,6 +59,20 @@ export class SignatureEntity extends LBEntity {
     default: '-',
   })
   direction: string;
+
+  @property({
+    type: 'object',
+    required: true,
+    default: {},
+  })
+  @Index('sig_ent_meta_gin_index', {synchronize: false})
+  @Index('sig_ent_meta_gist_fts_index', {synchronize: false})
+  @Column({
+    type: 'jsonb',
+  })
+  meta: {
+    [key: string]: any;
+  };
 
   constructor(data?: Partial<SignatureEntity>) {
     super(data);

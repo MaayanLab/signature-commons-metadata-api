@@ -1,7 +1,7 @@
 import {ViewEntity, Column, Connection, PrimaryColumn} from 'typeorm';
-import {SignatureEntity} from './signature_entitites.model';
+import {SignatureEntity} from './signature_entitity.model';
 import {Signature} from './signature.model';
-import {Entity as LBEntity, model} from '@loopback/repository';
+import {Entity as LBEntity, model, property} from '@loopback/repository';
 
 @ViewEntity({
   expression: (connection: Connection) =>
@@ -12,6 +12,7 @@ import {Entity as LBEntity, model} from '@loopback/repository';
       .addSelect('signature.meta', 'meta')
       .addSelect('signature_entity.entity', 'entity')
       .addSelect('signature_entity.direction', 'direction')
+      .addSelect('signature_entity.meta', 'relation')
       .from(Signature, 'signature')
       .innerJoin(
         SignatureEntity,
@@ -57,4 +58,17 @@ export class EntitySignatures extends LBEntity {
     type: 'varchar',
   })
   direction: string;
+
+  @property({
+    type: 'object',
+    required: true,
+    default: {},
+  })
+  @Column({
+    type: 'jsonb',
+  })
+  relation: {
+    [key: string]: any;
+  };
+  
 }
