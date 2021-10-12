@@ -70,5 +70,4 @@ export class EntitySignatures extends LBEntity {
   relation: {
     [key: string]: any;
   };
-  
 }

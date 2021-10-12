@@ -6,7 +6,12 @@ import {
   JoinColumn,
   Index,
 } from 'typeorm';
-import {Entity, Entity as LBEntity, model, property} from '@loopback/repository';
+import {
+  Entity,
+  Entity as LBEntity,
+  model,
+  property,
+} from '@loopback/repository';
 import {getJsonSchema} from '@loopback/rest';
 import {Entity as SigcomEntity} from './entity.model';
 import {Signature} from './signature.model';
