@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import {Entity as LBEntity, model, property} from '@loopback/repository';
 import {getJsonSchema} from '@loopback/rest';
-import {SignatureEntity} from './signature_entitites.model';
+import {SignatureEntity} from './signature_entitity.model';
 
 @model({
   name: 'Entity',

@@ -10,7 +10,7 @@ import {
 import {Entity as LBEntity, model, property} from '@loopback/repository';
 import {getJsonSchema} from '@loopback/rest';
 import {Library} from './library.model';
-import {SignatureEntity} from './signature_entitites.model';
+import {SignatureEntity} from './signature_entitity.model';
 
 @model({
   name: 'Signature',
