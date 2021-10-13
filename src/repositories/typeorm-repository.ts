@@ -52,9 +52,9 @@ export class TypeORMRepository<T extends Entity, ID extends string>
     this.typeOrmRepo = <Repository<T>>(
       await this.dataSource.getRepository(this.entityClass as any)
     );
-    this.tableName = this.typeOrmRepo.metadata.tableName;
-    this.columns = this.typeOrmRepo.metadata.columns.reduce(
-      (columns, col) =>
+    this.tableName = this.typeOrmRepo.getMetadata().tableName;
+    this.columns = this.typeOrmRepo.getMetadata().columns.reduce(
+      (columns: any, col: any) =>
         col.propertyName.startsWith('_')
           ? columns
           : {
@@ -63,8 +63,8 @@ export class TypeORMRepository<T extends Entity, ID extends string>
             },
       {},
     );
-    this.columnTypes = this.typeOrmRepo.metadata.columns.reduce(
-      (columns, col) =>
+    this.columnTypes = this.typeOrmRepo.getMetadata().columns.reduce(
+      (columns: any, col: any) =>
         col.propertyName.startsWith('_')
           ? columns
           : {
