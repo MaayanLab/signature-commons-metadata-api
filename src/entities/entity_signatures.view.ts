@@ -4,6 +4,7 @@ import {Signature} from './signature.model';
 import {Entity as LBEntity, model, property} from '@loopback/repository';
 
 @ViewEntity({
+  name: 'entity_signatures_meta',
   expression: (connection: Connection) =>
     connection
       .createQueryBuilder()
