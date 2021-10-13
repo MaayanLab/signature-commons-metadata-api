@@ -74,6 +74,7 @@ export class SignatureEntity extends LBEntity {
   @Index('sig_ent_meta_gist_fts_index', {synchronize: false})
   @Column({
     type: 'jsonb',
+    default: {},
   })
   meta: {
     [key: string]: any;
