@@ -125,6 +125,7 @@ export class UserInputController {
   async saveUserInput(
     @repository(UserInputRepository)
     userInputRepository: UserInputRepository,
+    @repository(CounterRepository)
     counterRepository: CounterRepository,
     @requestBody({
       description: 'Full object to be created',
