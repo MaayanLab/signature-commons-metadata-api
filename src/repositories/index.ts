@@ -9,3 +9,4 @@ export * from './typeorm-repository';
 export * from './signature_entities.repository';
 export * from './entity_signatures.repository';
 export * from './user_input.repository';
+export * from './counters.repository';
