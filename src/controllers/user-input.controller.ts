@@ -18,13 +18,18 @@ import {IGenericEntity} from '../generic-controllers/generic.controller';
 import {prune} from '../generic-controllers/generic.controller';
 import serializeError from 'serialize-error';
 
-import {UserInputRepository} from '../repositories';
+import {UserInputRepository, CounterRepository} from '../repositories';
 
 import {UserInput} from '../entities';
 import {UserProfile} from '../models';
 
 import debug from '../util/debug';
-import {v5 as uuidv5} from 'uuid';
+import {v5 as uuidv5, v4 as uuidv4} from 'uuid';
+import {IGenericEntity as CounterEntity} from './counter.controller';
+
+export class UserInputExt extends UserInput {
+  type: string;
+}
 
 @api({
   basePath: process.env.PREFIX,
@@ -120,6 +125,7 @@ export class UserInputController {
   async saveUserInput(
     @repository(UserInputRepository)
     userInputRepository: UserInputRepository,
+    counterRepository: CounterRepository,
     @requestBody({
       description: 'Full object to be created',
       required: true,
@@ -131,7 +137,7 @@ export class UserInputController {
         },
       },
     })
-    obj: UserInput,
+    obj: UserInputExt,
   ): Promise<IGenericEntity> {
     try {
       const modelSchema =
@@ -140,6 +146,7 @@ export class UserInputController {
       const namespace = process.env.NAMESPACE ?? '';
       const meta = JSON.stringify(obj.meta);
       const id = uuidv5(meta, namespace);
+      const type = obj.type || 'signature';
 
       const results = await userInputRepository.find({
         where: {
@@ -157,6 +164,7 @@ export class UserInputController {
         // it does not
         // console.log(`${id} is new`)
         debug('create', obj);
+
         const entity = await validate<IGenericEntity>(
           {
             $validator: modelSchema,
@@ -166,10 +174,46 @@ export class UserInputController {
           modelSchema,
         );
         delete entity.$validator;
-
+        await this.updateCounter(counterRepository, type);
         return {
           $validator: modelSchema,
           ...(<any>await userInputRepository.create(entity)),
+        };
+      }
+    } catch (e) {
+      debug(e);
+      throw new HttpErrors.NotAcceptable(serializeError(e));
+    }
+  }
+
+  async updateCounter(
+    counterRepository: CounterRepository,
+    type: string,
+  ): Promise<CounterEntity> {
+    try {
+      const results = await counterRepository.find({
+        where: {
+          type: type,
+        },
+      });
+      if (results.length > 0) {
+        // it exists
+        const data = results[0];
+        data.count = data.count += 1;
+        const id = data.id;
+        await counterRepository.updateById(id, data);
+        return data;
+      } else {
+        // it does not
+        const id = uuidv4();
+        const data = {
+          id,
+          type,
+          count: 1,
+        };
+        debug('create', data);
+        return {
+          ...(<any>await counterRepository.create(data)),
         };
       }
     } catch (e) {
