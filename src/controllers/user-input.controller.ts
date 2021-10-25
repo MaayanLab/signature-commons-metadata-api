@@ -1,7 +1,7 @@
 import {validate} from '@dcic/signature-commons-schema';
 import {authenticate, AuthenticationBindings} from '@loopback/authentication';
 import {inject} from '@loopback/core';
-import {repository} from '@loopback/repository';
+import {repository, CountSchema, Count} from '@loopback/repository';
 import {
   api,
   get,
@@ -65,6 +65,28 @@ export class UserInputController {
       $validator: '/dcic/signature-commons-schema/v6/core/user_input.json',
       ...(<any>await userInputRepository.findById(id)),
     };
+  }
+
+  @authenticate('GET.UserInput.count')
+  @get('/user_input/count', {
+    tags: ['UserInput'],
+    operationId: 'UserInput.count',
+    responses: {
+      '200': {
+        description: 'User input count',
+        content: {
+          'application/json': {
+            schema: CountSchema,
+          },
+        },
+      },
+    },
+  })
+  async getUserInputCount(
+    @repository(UserInputRepository)
+    userInputRepository: UserInputRepository,
+  ): Promise<Count> {
+    return userInputRepository.count();
   }
 
   @authenticate('GET.UserInput.save')
