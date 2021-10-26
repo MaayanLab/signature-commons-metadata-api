@@ -25,7 +25,6 @@ import {UserProfile} from '../models';
 
 import debug from '../util/debug';
 import {v5 as uuidv5, v4 as uuidv4} from 'uuid';
-import {IGenericEntity as CounterEntity} from './counter.controller';
 
 export class UserInputExt extends UserInput {
   type: string;
@@ -147,7 +146,7 @@ export class UserInputController {
       const namespace = process.env.NAMESPACE ?? '';
       const meta = JSON.stringify(obj.meta);
       const id = uuidv5(meta, namespace);
-      const type = obj.type || 'signature';
+      const type = obj.type || 'signatures';
 
       const results = await userInputRepository.find({
         where: {
@@ -175,7 +174,8 @@ export class UserInputController {
           modelSchema,
         );
         delete entity.$validator;
-        await this.updateCounter(counterRepository, type);
+        if (type === 'signatures')
+          await this.updateCounter(counterRepository, type);
         return {
           $validator: modelSchema,
           ...(<any>await userInputRepository.create(entity)),
@@ -190,7 +190,7 @@ export class UserInputController {
   async updateCounter(
     counterRepository: CounterRepository,
     type: string,
-  ): Promise<CounterEntity> {
+  ): Promise<void> {
     try {
       const results = await counterRepository.find({
         where: {
@@ -203,7 +203,6 @@ export class UserInputController {
         data.count = data.count += 1;
         const id = data.id;
         await counterRepository.updateById(id, data);
-        return data;
       } else {
         // it does not
         const id = uuidv4();
@@ -213,9 +212,7 @@ export class UserInputController {
           count: 1,
         };
         debug('create', data);
-        return {
-          ...(<any>await counterRepository.create(data)),
-        };
+        await counterRepository.create(data);
       }
     } catch (e) {
       debug(e);
