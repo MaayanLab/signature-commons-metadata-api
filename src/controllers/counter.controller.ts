@@ -9,6 +9,7 @@ import {
   post,
   HttpErrors,
   param,
+  requestBody,
 } from '@loopback/rest';
 import {
   CounterRepository,
@@ -148,5 +149,97 @@ export class CounterController {
     if (entry.meta['$counter'] === undefined) entry.meta['$counter'] = 1;
     else entry.meta['$counter'] = entry.meta['$counter'] + 1;
     await modelRepository.updateById(id, entry);
+  }
+
+  @authenticate('GET.Counters.PostUpdate')
+  @post('/counter', {
+    tags: ['UserInput'],
+    operationId: 'Counters.update',
+    responses: {
+      '200': {
+        description: 'Counters model instance',
+        content: {
+          'application/json': {
+            schema: {
+              'x-ts-type': IGenericEntity,
+            },
+          },
+        },
+      },
+    },
+  })
+  async updateCounterPost(
+    @repository(CounterRepository)
+    counterRepository: CounterRepository,
+    @repository(SignatureRepository)
+    signatureRepository: SignatureRepository,
+    @repository(EntityRepository)
+    entityRepository: EntityRepository,
+    @requestBody({
+      description: 'JSON of the find GET parameters',
+      required: false,
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              type: {
+                type: 'string',
+                description: 'type to update',
+              },
+              id: {
+                type: 'string',
+                description: 'id of the entity to update',
+              },
+            },
+          },
+        },
+      },
+    })
+    {
+      type,
+      id,
+    }: {
+      type: string;
+      id?: string;
+    },
+  ): Promise<IGenericEntity> {
+    try {
+      const results = await counterRepository.find({
+        where: {
+          type: type,
+        },
+      });
+      if (id !== undefined) {
+        await this.updateModelCounter(
+          signatureRepository,
+          entityRepository,
+          type,
+          id,
+        );
+      }
+      if (results.length > 0) {
+        // it exists
+        const data = results[0];
+        data.count = data.count += 1;
+        const uid = data.id;
+        await counterRepository.updateById(uid, data);
+        return data;
+      } else {
+        // it does not
+        const data = {
+          id: uuidv4(),
+          type,
+          count: 1,
+        };
+        debug('create', data);
+        return {
+          ...(<any>await counterRepository.create(data)),
+        };
+      }
+    } catch (e) {
+      debug(e);
+      throw new HttpErrors.NotAcceptable(serializeError(e));
+    }
   }
 }
