@@ -144,6 +144,7 @@ export class CounterController {
     id: string,
     clicktype?: string,
   ): Promise<void> {
+    console.log(type);
     const modelRepository =
       type === 'signatures' ? signatureRepository : entityRepository;
     const entry = await modelRepository.findById(id);
@@ -231,6 +232,7 @@ export class CounterController {
           entityRepository,
           type,
           id,
+          clicktype,
         );
       }
       if (clicktype === undefined || clicktype === 'counter') {
