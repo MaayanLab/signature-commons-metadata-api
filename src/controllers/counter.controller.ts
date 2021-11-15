@@ -142,13 +142,22 @@ export class CounterController {
     entityRepository: EntityRepository,
     type: string,
     id: string,
+    clicktype?: string,
   ): Promise<void> {
     const modelRepository =
       type === 'signatures' ? signatureRepository : entityRepository;
     const entry = await modelRepository.findById(id);
-    if (entry.meta['$counter'] === undefined) entry.meta['$counter'] = 1;
-    else entry.meta['$counter'] = entry.meta['$counter'] + 1;
-    await modelRepository.updateById(id, entry);
+    if (clicktype === undefined || clicktype === 'counter') {
+      if (entry.meta['$counter'] === undefined) entry.meta['$counter'] = 1;
+      else entry.meta['$counter'] = entry.meta['$counter'] + 1;
+      await modelRepository.updateById(id, entry);
+    } else if (clicktype === 'download_counter') {
+      if (entry.meta['$download_counter'] === undefined)
+        entry.meta['$download_counter'] = 1;
+      else
+        entry.meta['$download_counter'] = entry.meta['$download_counter'] + 1;
+      await modelRepository.updateById(id, entry);
+    }
   }
 
   @authenticate('GET.Counters.PostUpdate')
@@ -191,6 +200,10 @@ export class CounterController {
                 type: 'string',
                 description: 'id of the entity to update',
               },
+              clicktype: {
+                type: 'string',
+                description: 'type of the click',
+              },
             },
           },
         },
@@ -199,11 +212,13 @@ export class CounterController {
     {
       type,
       id,
+      clicktype,
     }: {
       type: string;
       id?: string;
+      clicktype?: string;
     },
-  ): Promise<IGenericEntity> {
+  ): Promise<IGenericEntity[]> {
     try {
       const results = await counterRepository.find({
         where: {
@@ -218,24 +233,30 @@ export class CounterController {
           id,
         );
       }
-      if (results.length > 0) {
-        // it exists
-        const data = results[0];
-        data.count = data.count += 1;
-        const uid = data.id;
-        await counterRepository.updateById(uid, data);
-        return data;
+      if (clicktype === undefined || clicktype === 'counter') {
+        if (results.length > 0) {
+          // it exists
+          const data = results[0];
+          data.count = data.count += 1;
+          const uid = data.id;
+          await counterRepository.updateById(uid, data);
+          return [data];
+        } else {
+          // it does not
+          const data = {
+            id: uuidv4(),
+            type,
+            count: 1,
+          };
+          debug('create', data);
+          return [
+            {
+              ...(<any>await counterRepository.create(data)),
+            },
+          ];
+        }
       } else {
-        // it does not
-        const data = {
-          id: uuidv4(),
-          type,
-          count: 1,
-        };
-        debug('create', data);
-        return {
-          ...(<any>await counterRepository.create(data)),
-        };
+        return [];
       }
     } catch (e) {
       debug(e);
