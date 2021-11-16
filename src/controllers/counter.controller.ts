@@ -13,9 +13,12 @@ import {
 } from '@loopback/rest';
 import {
   CounterRepository,
+  ResourceRepository,
+  LibraryRepository,
   SignatureRepository,
   EntityRepository,
 } from '../repositories';
+
 import {UserProfile} from '../models';
 
 import debug from '../util/debug';
@@ -93,6 +96,10 @@ export class CounterController {
   async updateCounter(
     @repository(CounterRepository)
     counterRepository: CounterRepository,
+    @repository(ResourceRepository)
+    resourceRepository: ResourceRepository,
+    @repository(LibraryRepository)
+    libraryRepository: LibraryRepository,
     @repository(SignatureRepository)
     signatureRepository: SignatureRepository,
     @repository(EntityRepository)
@@ -107,6 +114,8 @@ export class CounterController {
         },
       });
       await this.updateModelCounter(
+        resourceRepository,
+        libraryRepository,
         signatureRepository,
         entityRepository,
         type,
@@ -138,15 +147,20 @@ export class CounterController {
   }
 
   async updateModelCounter(
+    resourceRepository: ResourceRepository,
+    libraryRepository: LibraryRepository,
     signatureRepository: SignatureRepository,
     entityRepository: EntityRepository,
     type: string,
     id: string,
     clicktype?: string,
   ): Promise<void> {
-    console.log(type);
-    const modelRepository =
-      type === 'signatures' ? signatureRepository : entityRepository;
+    let modelRepository;
+    if (type === 'resources') modelRepository = resourceRepository;
+    if (type === 'libraries') modelRepository = libraryRepository;
+    if (type === 'signatures') modelRepository = signatureRepository;
+    else modelRepository = entityRepository;
+
     const entry = await modelRepository.findById(id);
     if (clicktype === undefined || clicktype === 'counter') {
       if (entry.meta['$counter'] === undefined) entry.meta['$counter'] = 1;
@@ -181,6 +195,10 @@ export class CounterController {
   async updateCounterPost(
     @repository(CounterRepository)
     counterRepository: CounterRepository,
+    @repository(ResourceRepository)
+    resourceRepository: ResourceRepository,
+    @repository(LibraryRepository)
+    libraryRepository: LibraryRepository,
     @repository(SignatureRepository)
     signatureRepository: SignatureRepository,
     @repository(EntityRepository)
@@ -228,6 +246,8 @@ export class CounterController {
       });
       if (id !== undefined) {
         await this.updateModelCounter(
+          resourceRepository,
+          libraryRepository,
           signatureRepository,
           entityRepository,
           type,
