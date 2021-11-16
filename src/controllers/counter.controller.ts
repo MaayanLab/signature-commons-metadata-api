@@ -156,9 +156,10 @@ export class CounterController {
     clicktype?: string,
   ): Promise<void> {
     let modelRepository;
+    console.log(type)
     if (type === 'resources') modelRepository = resourceRepository;
-    if (type === 'libraries') modelRepository = libraryRepository;
-    if (type === 'signatures') modelRepository = signatureRepository;
+    else if (type === 'libraries') modelRepository = libraryRepository;
+    else if (type === 'signatures') modelRepository = signatureRepository;
     else modelRepository = entityRepository;
 
     const entry = await modelRepository.findById(id);
