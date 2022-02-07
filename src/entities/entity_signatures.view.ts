@@ -1,10 +1,10 @@
 import {ViewEntity, Column, Connection, PrimaryColumn} from 'typeorm';
 import {SignatureEntity} from './signature_entitity.model';
 import {Signature} from './signature.model';
-import {Entity as LBEntity, model, property} from '@loopback/repository';
+import {Entity as LBEntity, model} from '@loopback/repository';
 
 @ViewEntity({
-  name: 'entity_signatures_meta',
+  name: 'entity_signatures',
   expression: (connection: Connection) =>
     connection
       .createQueryBuilder()
@@ -13,8 +13,9 @@ import {Entity as LBEntity, model, property} from '@loopback/repository';
       .addSelect('signature.meta', 'meta')
       .addSelect('signature_entity.entity', 'entity')
       .addSelect('signature_entity.direction', 'direction')
-      .addSelect('signature_entity.meta', 'relation')
+      .addSelect('signature_entity.score', 'score')
       .from(Signature, 'signature')
+      .where("signature_entity.top_signatures = 'true' OR signature_entity.direction = '-'")
       .innerJoin(
         SignatureEntity,
         'signature_entity',
@@ -60,15 +61,9 @@ export class EntitySignatures extends LBEntity {
   })
   direction: string;
 
-  @property({
-    type: 'object',
-    required: true,
-    default: {},
-  })
   @Column({
-    type: 'jsonb',
+    type: 'float',
+    default: 0,
   })
-  relation: {
-    [key: string]: any;
-  };
+  score: number;
 }

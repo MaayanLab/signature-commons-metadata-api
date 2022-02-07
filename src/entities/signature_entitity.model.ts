@@ -66,6 +66,39 @@ export class SignatureEntity extends LBEntity {
   direction: string;
 
   @property({
+    type: 'number',
+    required: false,
+    default: 0,
+  })
+  @Column({
+    type: 'float',
+    default: 0,
+  })
+  score: number;
+
+  @property({
+    type: 'Boolean',
+    required: false,
+    default: false,
+  })
+  @Column({
+    type: 'boolean',
+    default: 'false',
+  })
+  top_signatures: string;
+
+  @property({
+    type: 'Boolean',
+    required: false,
+    default: false,
+  })
+  @Column({
+    type: 'boolean',
+    default: 'false',
+  })
+  top_entities: string;
+
+  @property({
     type: 'object',
     required: true,
     default: {},
