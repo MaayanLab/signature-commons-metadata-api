@@ -15,7 +15,9 @@ import {Entity as LBEntity, model} from '@loopback/repository';
       .addSelect('signature_entity.direction', 'direction')
       .addSelect('signature_entity.score', 'score')
       .from(Signature, 'signature')
-      .where("signature_entity.top_signatures = 'true' OR signature_entity.direction = '-'")
+      .where(
+        "signature_entity.top_signatures = 'true' OR signature_entity.direction = '-'",
+      )
       .innerJoin(
         SignatureEntity,
         'signature_entity',
