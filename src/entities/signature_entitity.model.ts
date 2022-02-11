@@ -63,6 +63,7 @@ export class SignatureEntity extends LBEntity {
     primary: true,
     default: '-',
   })
+  @Index()
   direction: string;
 
   @property({
@@ -85,6 +86,7 @@ export class SignatureEntity extends LBEntity {
     type: 'boolean',
     default: 'false',
   })
+  @Index()
   top_signatures: string;
 
   @property({
@@ -96,6 +98,7 @@ export class SignatureEntity extends LBEntity {
     type: 'boolean',
     default: 'false',
   })
+  @Index()
   top_entities: string;
 
   @property({
