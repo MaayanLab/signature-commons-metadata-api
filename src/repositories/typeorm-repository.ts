@@ -361,7 +361,7 @@ export class TypeORMRepository<T extends Entity, ID extends string>
 
   async count(where?: Where, options?: Options): Promise<Count> {
     await this.init();
-    const estimate = false; //(options ?? {}).estimate;
+    const estimate = (options ?? {}).estimate;
     if (estimate) {
       const query = this.typeOrmRepo
         .createQueryBuilder(this.tableName)
