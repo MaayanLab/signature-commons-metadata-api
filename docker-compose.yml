@@ -2,7 +2,7 @@ version: '2'
 services:
   meta-api:
     build: .
-    image: maayanlab/signature-commons-metadata-api-many:1.13.9
+    image: maayanlab/signature-commons-metadata-api-many:1.13.10
     env_file: .env
   meta-db:
     build: ./docker/postgres
