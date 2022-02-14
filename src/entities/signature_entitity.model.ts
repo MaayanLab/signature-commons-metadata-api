@@ -101,21 +101,6 @@ export class SignatureEntity extends LBEntity {
   @Index()
   top_entities: string;
 
-  @property({
-    type: 'object',
-    required: true,
-    default: {},
-  })
-  @Index('sig_ent_meta_gin_index', {synchronize: false})
-  @Index('sig_ent_meta_gist_fts_index', {synchronize: false})
-  @Column({
-    type: 'jsonb',
-    default: {},
-  })
-  meta: {
-    [key: string]: any;
-  };
-
   constructor(data?: Partial<SignatureEntity>) {
     super(data);
   }
