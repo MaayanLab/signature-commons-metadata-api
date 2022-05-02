@@ -53,7 +53,7 @@ export class CounterController {
   @authenticate('GET.Counter')
   @get('/counter', {
     tags: ['Counter'],
-    operationId: 'Counter.getCoint',
+    operationId: 'Counter.getCount',
     responses: {
       '200': {
         description:
@@ -79,7 +79,7 @@ export class CounterController {
   @authenticate('GET.Counters.update')
   @post('/counter/{type}/{id}', {
     tags: ['UserInput'],
-    operationId: 'Counters.update',
+    operationId: 'Counters.update.get',
     responses: {
       '200': {
         description: 'Counters model instance',
@@ -178,7 +178,7 @@ export class CounterController {
   @authenticate('GET.Counters.PostUpdate')
   @post('/counter', {
     tags: ['UserInput'],
-    operationId: 'Counters.update',
+    operationId: 'Counters.update.post',
     responses: {
       '200': {
         description: 'Counters model instance',
