@@ -79,7 +79,7 @@ export class CounterController {
   @authenticate('GET.Counters.update')
   @post('/counter/{type}/{id}', {
     tags: ['UserInput'],
-    operationId: 'Counters.update.get',
+    operationId: 'Counters.update.id',
     responses: {
       '200': {
         description: 'Counters model instance',
