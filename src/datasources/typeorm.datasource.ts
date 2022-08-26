@@ -47,6 +47,7 @@ export class TypeORMDataSource extends DataSource {
       ...(await getConnectionOptions()),
       ...this.settings,
     } as ConnectionOptions;
+
     this._connection = await createConnection({
       ...connectionOptions,
       synchronize: false,
